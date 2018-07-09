@@ -2,17 +2,17 @@ import babel from 'rollup-plugin-babel'
 import { uglify } from 'rollup-plugin-uglify'
 
 export default {
-  entry: 'src/index.js',
-  format: 'umd',
+  input: 'src/index.js',
   output: {
+    format: 'umd',
+    file: 'dist/index.js',
     exports: 'named',
+    name: process.env.npm_package_name,
   },
-  moduleName: process.env.npm_package_name,
   plugins: [
     babel({
       exclude: 'node_modules/**',
     }),
     uglify(),
   ],
-  dest: 'dist/index.js',
 }

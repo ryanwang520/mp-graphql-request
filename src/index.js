@@ -10,6 +10,9 @@ class ClientError extends Error {
   }
 
   static extractMessage(response) {
+    if (response.error) {
+      return response.error
+    }
     try {
       return response.errors && response.errors[0].message
     } catch (e) {
@@ -24,7 +27,7 @@ export class GraphQLClient {
     this.options = options || {}
   }
 
-  async request(query, variables) {
+  request(query, variables) {
     const { headers, ...others } = this.options
 
     const body = JSON.stringify({
@@ -32,45 +35,38 @@ export class GraphQLClient {
       variables: variables ? variables : undefined,
     })
 
-    const request = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       wx.request({
         url: this.url,
         headers: Object.assign({ 'Content-Type': 'application/json' }, headers),
         method: 'POST',
         data: body,
-        success: function(res) {
-          resolve(res)
+        success: function(response) {
+          const result = response.data
+          if (
+            response.statusCode >= 200 &&
+            response.statusCode <= 299 &&
+            !result.errors &&
+            result.data
+          ) {
+            resolve(result.data)
+          } else {
+            const errorResult =
+              typeof result === 'string' ? { error: result } : result
+            reject(
+              new ClientError(
+                { ...errorResult, status: response.statusCode },
+                { query, variables }
+              )
+            )
+          }
         },
         fail: function(err) {
-          console.log(err.errMsg)
-          console.log(err)
-          resolve({
-            error: 'error',
-            data: 'error data',
-          })
+          reject(new ClientError({ error: err.errMsg }, { query, variables }))
         },
         ...others,
       })
     })
-
-    const response = await request
-    const result = response.data
-    if (
-      response.statusCode >= 200 &&
-      response.statusCode <= 299 &&
-      !result.errors &&
-      result.data
-    ) {
-      return result.data
-    } else {
-      console.log('throw error')
-      const errorResult =
-        typeof result === 'string' ? { error: result } : result
-      throw new ClientError(
-        { ...errorResult, status: response.statusCode },
-        { query, variables }
-      )
-    }
   }
 
   setHeaders(headers) {
@@ -91,7 +87,7 @@ export class GraphQLClient {
   }
 }
 
-export async function request(url, query, variables) {
+export function request(url, query, variables) {
   const client = new GraphQLClient(url)
 
   return client.request(query, variables)

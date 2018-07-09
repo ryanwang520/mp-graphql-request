@@ -1,6 +1,6 @@
 {
   "name": "wx-graphql-request",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
@@ -14,6 +14,7 @@
   ],
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.52",
+    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.36",
     "@babel/preset-env": "^7.0.0-beta.52",
     "rollup": "^0.62.0",
     "rollup-plugin-babel": "^4.0.0-beta.7",
