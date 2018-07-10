@@ -1,5 +1,5 @@
 {
-  "name": "wx-graphql-request",
+  "name": "mp-graphql-request",
   "version": "1.0.5",
   "main": "dist/index.js",
   "license": "MIT",
@@ -10,7 +10,8 @@
     "wechat",
     "promise",
     "request",
-    "graphql"
+    "graphql",
+    "mini program"
   ],
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.52",
