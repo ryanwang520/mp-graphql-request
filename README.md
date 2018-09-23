@@ -1,11 +1,11 @@
-# wx-graphql-request
+# mp-graphql-request
 小程序Graphql Client
 
 
 ## Quickstart
 
 ```js
-import { request } from 'wx-graphql-request'
+import { request } from 'mp-graphql-request'
 const query = `
   query getMovies($first: Int!) {
     allMovies(first:$first) {
