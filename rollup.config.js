@@ -4,15 +4,13 @@ import { uglify } from 'rollup-plugin-uglify'
 export default {
   input: 'src/index.js',
   output: {
-    format: 'umd',
+    format: 'cjs',
     file: 'dist/index.js',
     exports: 'named',
     name: process.env.npm_package_name,
   },
   plugins: [
-    babel({
-      exclude: 'node_modules/**',
-    }),
+    babel(),
     uglify(),
   ],
 }
